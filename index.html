@@ -7,14 +7,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
     --green: #1D9E75;
     --green-dark: #0F6E56;
     --green-light: #E1F5EE;
-    --green-deep: #085041;
     --text: #1a1a18;
     --text-muted: #666660;
     --border: rgba(0,0,0,0.12);
@@ -23,454 +22,313 @@
     --radius: 12px;
     --radius-sm: 8px;
   }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2rem 1rem 4rem;
-  }
-
-  .page {
-    max-width: 560px;
-    margin: 0 auto;
-  }
-
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
-  .paw {
-    font-size: 36px;
-    display: block;
-    margin-bottom: 10px;
-    line-height: 1;
-  }
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: 0.01em;
-  }
-  .header p {
-    font-size: 14px;
-    color: var(--text-muted);
-    margin-top: 5px;
-    letter-spacing: 0.02em;
-  }
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 1.5rem 0;
-  }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 0.5px;
-    background: var(--border);
-  }
-  .divider span {
-    font-size: 12px;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-
-  /* Service cards */
-  .services {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 6px;
-  }
-  .svc-card {
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.1rem 1.25rem;
-    cursor: pointer;
-    background: var(--card);
-    transition: border-color 0.15s, background 0.15s;
-    user-select: none;
-  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 2rem 1rem 4rem; }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 2rem; }
+  .header h1 { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 600; color: var(--text); }
+  .header p { font-size: 14px; color: var(--text-muted); margin-top: 5px; }
+  .steps { display: flex; align-items: center; justify-content: center; margin-bottom: 2rem; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--text-muted); background: var(--card); transition: all .3s; flex-shrink: 0; }
+  .step-dot.active { border-color: var(--green); color: var(--green-dark); background: var(--green-light); }
+  .step-dot.done { border-color: var(--green); background: var(--green); color: #fff; }
+  .step-line { height: 1.5px; width: 48px; background: var(--border); transition: background .3s; }
+  .step-line.done { background: var(--green); }
+  .page { display: none; animation: fadeIn .35s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .svc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 8px; }
+  .svc-card { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem 1.25rem; cursor: pointer; background: var(--card); transition: border-color .15s, background .15s; text-align: center; }
   .svc-card:hover { border-color: var(--green); }
-  .svc-card.selected {
-    border-color: var(--green);
-    background: var(--green-light);
-  }
-  .svc-icon { font-size: 22px; display: block; margin-bottom: 8px; }
-  .svc-card h3 { font-size: 15px; font-weight: 500; margin-bottom: 2px; }
+  .svc-card.selected { border-color: var(--green); background: var(--green-light); }
+  .svc-card i { font-size: 28px; display: block; margin-bottom: 10px; color: var(--green); }
+  .svc-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
   .svc-card .price { font-size: 24px; font-weight: 500; color: var(--green-dark); }
-  .svc-card .per { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .svc-card .per { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
   .svc-card .desc { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
-
-  /* Form */
-  .form-card {
-    background: var(--card);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-top: 1.5rem;
-  }
-  .section-label {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    margin-bottom: 10px;
-    margin-top: 1.25rem;
-  }
-  .section-label:first-child { margin-top: 0; }
+  .form-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1.5rem; }
+  .sec-label { font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; margin: 1.25rem 0 8px; }
+  .sec-label:first-child { margin-top: 0; }
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .field { margin-bottom: 10px; }
-  .field label {
-    display: block;
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 4px;
-  }
-  .field input,
-  .field select,
-  .field textarea {
-    width: 100%;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--bg);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    outline: none;
-    transition: border-color 0.15s;
-    -webkit-appearance: none;
-  }
-  .field input:focus,
-  .field select:focus,
-  .field textarea:focus {
-    border-color: var(--green);
-    background: #fff;
-  }
+  .field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+  .field input, .field textarea { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; outline: none; transition: border-color .15s; -webkit-appearance: none; }
+  .field input:focus, .field textarea:focus { border-color: var(--green); background: #fff; }
   .field textarea { resize: vertical; min-height: 88px; line-height: 1.55; }
   .required { color: #c0392b; }
-  .err {
-    font-size: 12px;
-    color: #c0392b;
-    margin-top: 3px;
-    display: none;
-  }
+  .err { font-size: 12px; color: #c0392b; margin-top: 3px; display: none; }
   .err.show { display: block; }
-  .err-global {
-    font-size: 13px;
-    color: #c0392b;
-    background: #fdf0ef;
-    border: 0.5px solid #f5c6c6;
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    margin-top: 14px;
-    display: none;
-  }
+  .err-global { font-size: 13px; color: #c0392b; background: #fdf0ef; border: 0.5px solid #f5c6c6; border-radius: var(--radius-sm); padding: 10px 14px; margin-top: 12px; display: none; }
   .err-global.show { display: block; }
-
-  /* Submit */
-  .submit-btn {
-    width: 100%;
-    margin-top: 1.25rem;
-    padding: 14px;
-    background: var(--green);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-    letter-spacing: 0.01em;
-  }
-  .submit-btn:hover { background: var(--green-dark); }
-  .submit-btn:active { transform: scale(0.99); }
-  .submit-btn:disabled { background: #aaa; cursor: not-allowed; }
-
-  .fine-print {
-    text-align: center;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 1rem;
-    line-height: 1.6;
-  }
-  .fine-print a { color: var(--green-dark); text-decoration: none; }
-
-  /* Confirmation */
-  .confirm {
-    text-align: center;
-    padding: 2rem 1rem 1rem;
-    display: none;
-  }
-  .confirm-icon { font-size: 52px; display: block; margin-bottom: 1rem; }
-  .confirm h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
+  .btn-row { display: flex; gap: 10px; margin-top: 1.5rem; }
+  .btn-back { flex: 0 0 auto; padding: 12px 20px; background: transparent; border: 0.5px solid var(--border); border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; color: var(--text-muted); transition: background .15s; }
+  .btn-back:hover { background: #f0f0ee; }
+  .btn-next { flex: 1; padding: 13px; background: var(--green); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background .15s; }
+  .btn-next:hover { background: var(--green-dark); }
+  .btn-next:disabled { background: #aaa; cursor: not-allowed; }
+  .confirm { text-align: center; padding: 2rem 0 1rem; }
+  .confirm-icon { font-size: 52px; color: var(--green); display: block; margin-bottom: 1rem; }
+  .confirm h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 600; margin-bottom: 8px; }
   .confirm p { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
-  .summary-box {
-    background: var(--card);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    margin: 1.25rem 0;
-    text-align: left;
-  }
-  .summary-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 6px 0;
-    border-bottom: 0.5px solid var(--border);
-    font-size: 13px;
-  }
-  .summary-row:last-child { border-bottom: none; }
-  .summary-row .key { color: var(--text-muted); flex-shrink: 0; }
-  .summary-row .val { font-weight: 500; text-align: right; }
-  .contact-note {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 1rem;
-    line-height: 1.7;
-  }
-  .contact-note a { color: var(--green-dark); text-decoration: none; }
-
-  @media (max-width: 480px) {
-    .services { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .row2 { grid-template-columns: 1fr; gap: 0; }
-    .form-card { padding: 1.1rem; }
-  }
+  .summary { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin: 1.25rem 0; text-align: left; }
+  .sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
+  .sum-row:last-child { border-bottom: none; }
+  .sum-row span:first-child { color: var(--text-muted); }
+  .sum-row span:last-child { font-weight: 500; text-align: right; }
+  .fine-print { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 1rem; line-height: 1.6; }
+  .fine-print a { color: var(--green-dark); text-decoration: none; }
+  @media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } .form-card { padding: 1.1rem; } }
 </style>
 </head>
 <body>
-<div class="page">
+<div class="wrap">
+  <div class="header">
+    <div style="font-size:36px;margin-bottom:8px;color:#1D9E75"><i class="ti ti-paw"></i></div>
+    <h1>Lucky Puppy</h1>
+    <p>Dog Boarding &amp; Daycare &nbsp;·&nbsp; Nyack, NY</p>
+  </div>
 
-  <div id="form-area">
-    <div class="header">
-      <span class="paw">🐾</span>
-      <h1>Lucky Puppy</h1>
-      <p>Dog Boarding &amp; Daycare &nbsp;·&nbsp; Nyack, NY</p>
-    </div>
+  <div class="steps">
+    <div class="step-dot active" id="dot-1">1</div>
+    <div class="step-line" id="line-1"></div>
+    <div class="step-dot" id="dot-2">2</div>
+    <div class="step-line" id="line-2"></div>
+    <div class="step-dot" id="dot-3">3</div>
+    <div class="step-line" id="line-3"></div>
+    <div class="step-dot" id="dot-4"><i class="ti ti-check" style="font-size:13px"></i></div>
+  </div>
 
-    <div class="divider"><span>Choose a service</span></div>
-
-    <div class="services">
+  <!-- Page 1: Service -->
+  <div class="page active" id="page-1">
+    <div class="svc-grid">
       <div class="svc-card" id="card-daycare" onclick="selectService('daycare')" role="button" tabindex="0">
-        <span class="svc-icon">☀️</span>
+        <i class="ti ti-sun"></i>
         <h3>Daycare</h3>
         <div class="price">$45</div>
         <div class="per">per day</div>
-        <div class="desc">Half day (0–4 hrs) or full day (4+ hrs) in our home.</div>
+        <div class="desc">Half or full day in our home setting.</div>
       </div>
       <div class="svc-card" id="card-boarding" onclick="selectService('boarding')" role="button" tabindex="0">
-        <span class="svc-icon">🌙</span>
+        <i class="ti ti-moon"></i>
         <h3>Boarding</h3>
         <div class="price">$75</div>
         <div class="per">per night</div>
-        <div class="desc">Overnight stay — your dog joins our pack routine.</div>
+        <div class="desc">Overnight stay — your dog joins our pack.</div>
       </div>
     </div>
-    <div class="err" id="err-service">Please select a service above.</div>
+    <div class="err" id="err-service">Please select a service.</div>
+    <div class="btn-row">
+      <button class="btn-next" onclick="goTo(2)">Continue &rarr;</button>
+    </div>
+  </div>
 
-    <!-- Hidden input to carry service into Formspree submission -->
-    <input type="hidden" id="service-input" name="Service" value="" />
-
+  <!-- Page 2: Owner info -->
+  <div class="page" id="page-2">
     <div class="form-card">
-      <div class="section-label">Owner info</div>
+      <div class="sec-label">Owner info</div>
       <div class="row2">
         <div class="field">
           <label for="fname">First name <span class="required">*</span></label>
-          <input type="text" id="fname" name="First name" placeholder="Jane" autocomplete="given-name" />
+          <input type="text" id="fname" placeholder="Jane" autocomplete="given-name" />
           <div class="err" id="err-fname">Required.</div>
         </div>
         <div class="field">
           <label for="lname">Last name <span class="required">*</span></label>
-          <input type="text" id="lname" name="Last name" placeholder="Smith" autocomplete="family-name" />
+          <input type="text" id="lname" placeholder="Smith" autocomplete="family-name" />
           <div class="err" id="err-lname">Required.</div>
         </div>
       </div>
       <div class="row2">
         <div class="field">
           <label for="phone">Phone <span class="required">*</span></label>
-          <input type="tel" id="phone" name="Phone" placeholder="(555) 000-0000" autocomplete="tel" />
+          <input type="tel" id="phone" placeholder="(555) 000-0000" autocomplete="tel" />
           <div class="err" id="err-phone">Required.</div>
         </div>
         <div class="field">
           <label for="email">Email <span class="required">*</span></label>
-          <input type="email" id="email" name="Email" placeholder="jane@email.com" autocomplete="email" />
+          <input type="email" id="email" placeholder="jane@email.com" autocomplete="email" />
           <div class="err" id="err-email">Required.</div>
         </div>
       </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(1)">&larr; Back</button>
+      <button class="btn-next" onclick="goTo(3)">Continue &rarr;</button>
+    </div>
+  </div>
 
-      <div class="section-label">Dog info</div>
+  <!-- Page 3: Dog info + dates -->
+  <div class="page" id="page-3">
+    <div class="form-card">
+      <div class="sec-label">Dog info</div>
       <div class="row2">
         <div class="field">
           <label for="dogname">Dog's name <span class="required">*</span></label>
-          <input type="text" id="dogname" name="Dog name" placeholder="Biscuit" />
+          <input type="text" id="dogname" placeholder="Biscuit" />
           <div class="err" id="err-dogname">Required.</div>
         </div>
         <div class="field">
           <label for="breed">Breed <span class="required">*</span></label>
-          <input type="text" id="breed" name="Breed" placeholder="Golden Retriever" />
+          <input type="text" id="breed" placeholder="Golden Retriever" />
           <div class="err" id="err-breed">Required.</div>
         </div>
       </div>
       <div class="row2">
         <div class="field">
           <label for="age">Age</label>
-          <input type="text" id="age" name="Age" placeholder="2 years" />
+          <input type="text" id="age" placeholder="2 years" />
         </div>
         <div class="field">
           <label for="weight">Weight (approx.)</label>
-          <input type="text" id="weight" name="Weight" placeholder="45 lbs" />
+          <input type="text" id="weight" placeholder="45 lbs" />
         </div>
       </div>
-
-      <div class="section-label">Dates</div>
+      <div class="sec-label">Dates</div>
       <div class="row2">
         <div class="field">
           <label for="date-start" id="date1-label">Start date <span class="required">*</span></label>
-          <input type="date" id="date-start" name="Start date" />
+          <input type="date" id="date-start" />
           <div class="err" id="err-date">Please select a date.</div>
         </div>
         <div class="field">
           <label for="date-end" id="date2-label">End date</label>
-          <input type="date" id="date-end" name="End date" />
+          <input type="date" id="date-end" />
         </div>
       </div>
-
-      <div class="section-label">Anything we should know?</div>
+      <div class="sec-label">Anything we should know?</div>
       <div class="field">
-        <textarea id="notes" name="Notes" placeholder="Allergies, medications, behavior notes, vaccination info..."></textarea>
+        <textarea id="notes" placeholder="Allergies, medications, behavior notes, vaccination info..."></textarea>
       </div>
-
-      <div class="err-global" id="err-global">Something went wrong submitting the form. Please try again or email us directly at <a href="mailto:luckypuppynyack@gmail.com">luckypuppynyack@gmail.com</a>.</div>
-
-      <button class="submit-btn" id="submit-btn" onclick="submitForm()">Request booking</button>
-
-      <p class="fine-print">
-        We'll confirm your dates within 24 hours. &nbsp;
-        Questions? <a href="tel:9739023483">973-902-3483</a> or <a href="mailto:luckypuppynyack@gmail.com">luckypuppynyack@gmail.com</a>
-      </p>
+      <div class="err-global" id="err-global">Something went wrong. Please try again or email us at <a href="mailto:luckypuppynyack@gmail.com">luckypuppynyack@gmail.com</a>.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(2)">&larr; Back</button>
+      <button class="btn-next" id="submit-btn" onclick="submitForm()">Submit booking</button>
     </div>
   </div>
 
-  <!-- Confirmation screen -->
-  <div class="confirm" id="confirm-area">
-    <span class="confirm-icon">🐶</span>
-    <h2>You're in the pack!</h2>
-    <p>Thanks for reaching out. Donnie &amp; Rasheedat will confirm your booking within 24 hours.</p>
-    <div class="summary-box" id="summary"></div>
-    <p class="contact-note">
-      Questions? Reach us at <a href="mailto:luckypuppynyack@gmail.com">luckypuppynyack@gmail.com</a><br />
-      or call/text <a href="tel:9739023483">973-902-3483</a>
-    </p>
+  <!-- Page 4: Confirmation -->
+  <div class="page" id="page-4">
+    <div class="confirm">
+      <i class="ti ti-circle-check confirm-icon"></i>
+      <h2>You're in the pack!</h2>
+      <p>Thanks for reaching out. We'll confirm your booking within 24 hours.</p>
+      <div class="summary" id="summary"></div>
+      <p class="fine-print">Questions? <a href="mailto:luckypuppynyack@gmail.com">luckypuppynyack@gmail.com</a> or <a href="tel:9739023483">973-902-3483</a></p>
+    </div>
   </div>
-
 </div>
 
 <script>
-  // =====================================================
-  // STEP 1: Replace this with your Formspree endpoint
-  // e.g. "https://formspree.io/f/xxxxxxxx"
-  const ENDPOINT = "https://script.google.com/macros/s/AKfycbz6FF4rMUkOAoyg90HWmuvdH1Mzxf0vZghmkSznk5PhXVvfj4ijRp6Iq8e1C8TDOHk9pA/exec";
-  // =====================================================
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbz6FF4rMUkOAoyg90HWmuvdH1Mzxf0vZghmkSznk5PhXVvfj4ijRp6Iq8e1C8TDOHk9pA/exec";
+let selectedService = null;
+let currentPage = 1;
 
-  let selectedService = null;
+function selectService(s) {
+  selectedService = s;
+  document.getElementById('card-daycare').classList.toggle('selected', s === 'daycare');
+  document.getElementById('card-boarding').classList.toggle('selected', s === 'boarding');
+  const isBoarding = s === 'boarding';
+  document.getElementById('date1-label').innerHTML = (isBoarding ? 'Check-in date' : 'Daycare date') + ' <span style="color:#c0392b">*</span>';
+  document.getElementById('date2-label').textContent = isBoarding ? 'Check-out date' : 'End date (optional)';
+  document.getElementById('err-service').classList.remove('show');
+}
 
-  function selectService(s) {
-    selectedService = s;
-    document.getElementById('card-daycare').classList.toggle('selected', s === 'daycare');
-    document.getElementById('card-boarding').classList.toggle('selected', s === 'boarding');
-    document.getElementById('service-input').value = s === 'boarding' ? 'Boarding ($75/night)' : 'Daycare ($45/day)';
-    const isBoarding = s === 'boarding';
-    document.getElementById('date1-label').innerHTML = (isBoarding ? 'Check-in date' : 'Daycare date') + ' <span style="color:#c0392b">*</span>';
-    document.getElementById('date2-label').textContent = isBoarding ? 'Check-out date' : 'End date (optional)';
-    document.getElementById('err-service').classList.remove('show');
+document.querySelectorAll('.svc-card').forEach(c => {
+  c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') c.click(); });
+});
+
+function v(id) { return document.getElementById(id).value.trim(); }
+function showErr(id, show) { document.getElementById(id).classList.toggle('show', show); }
+
+function updateSteps(to) {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < to) dot.classList.add('done');
+    else if (i === to) dot.classList.add('active');
+    if (i < 4) document.getElementById('line-' + i).classList.toggle('done', i < to);
   }
+}
 
-  document.querySelectorAll('.svc-card').forEach(card => {
-    card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') card.click();
-    });
+function goTo(page) {
+  if (page === 2 && !validatePage1()) return;
+  if (page === 3 && !validatePage2()) return;
+  document.getElementById('page-' + currentPage).classList.remove('active');
+  currentPage = page;
+  document.getElementById('page-' + currentPage).classList.add('active');
+  updateSteps(page);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function validatePage1() {
+  if (!selectedService) { showErr('err-service', true); return false; }
+  showErr('err-service', false); return true;
+}
+
+function validatePage2() {
+  let ok = true;
+  ['fname','lname','phone','email'].forEach(f => {
+    if (!v(f)) { showErr('err-'+f, true); ok = false; } else { showErr('err-'+f, false); }
   });
+  return ok;
+}
 
-  function v(id) { return document.getElementById(id).value.trim(); }
-  function showErr(id, show) { document.getElementById(id).classList.toggle('show', show); }
+function validatePage3() {
+  let ok = true;
+  ['dogname','breed'].forEach(f => {
+    if (!v(f)) { showErr('err-'+f, true); ok = false; } else { showErr('err-'+f, false); }
+  });
+  if (!v('date-start')) { showErr('err-date', true); ok = false; } else { showErr('err-date', false); }
+  return ok;
+}
 
-  async function submitForm() {
-    let ok = true;
-    if (!selectedService) { showErr('err-service', true); ok = false; } else { showErr('err-service', false); }
-    ['fname','lname','phone','email','dogname','breed'].forEach(f => {
-      if (!v(f)) { showErr('err-'+f, true); ok = false; } else { showErr('err-'+f, false); }
+async function submitForm() {
+  if (!validatePage3()) return;
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const payload = {
+    service: selectedService === 'boarding' ? 'Boarding ($75/night)' : 'Daycare ($45/day)',
+    firstName: v('fname'), lastName: v('lname'),
+    phone: v('phone'), email: v('email'),
+    dogName: v('dogname'), breed: v('breed'),
+    age: v('age'), weight: v('weight'),
+    startDate: v('date-start'), endDate: v('date-end'),
+    notes: v('notes'),
+  };
+
+  try {
+    const res = await fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
     });
-    if (!v('date-start')) { showErr('err-date', true); ok = false; } else { showErr('err-date', false); }
-    if (!ok) { document.querySelector('.err.show')?.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    const data = await res.json();
+    const bookingId = data.bookingId || 'N/A';
 
-    const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
+    const rows = [
+      ['Booking ID', bookingId],
+      ['Service', payload.service],
+      ['Owner', payload.firstName + ' ' + payload.lastName],
+      ['Phone', payload.phone],
+      ['Email', payload.email],
+      ['Dog', payload.dogName + (payload.breed ? ' (' + payload.breed + ')' : '')],
+      ['Dates', payload.startDate + (payload.endDate ? ' → ' + payload.endDate : '')],
+    ];
+    if (payload.notes) rows.push(['Notes', payload.notes]);
 
-    const payload = {
-      service: document.getElementById('service-input').value,
-      firstName: v('fname'),
-      lastName: v('lname'),
-      phone: v('phone'),
-      email: v('email'),
-      dogName: v('dogname'),
-      breed: v('breed'),
-      age: v('age'),
-      weight: v('weight'),
-      startDate: v('date-start'),
-      endDate: v('date-end'),
-      notes: v('notes'),
-    };
+    document.getElementById('summary').innerHTML = rows
+      .map(([k, val]) => `<div class="sum-row"><span>${k}</span><span>${val}</span></div>`)
+      .join('');
 
-    try {
-      await fetch(ENDPOINT, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      // no-cors means we can't read response status, but no exception = success
-
-      // Build confirmation summary
-      const rows = [
-        ['Service', payload.Service],
-        ['Owner', v('fname') + ' ' + v('lname')],
-        ['Phone', v('phone')],
-        ['Email', v('email')],
-        ['Dog', v('dogname') + (v('breed') ? ' (' + v('breed') + ')' : '')],
-        ['Dates', v('date-start') + (v('date-end') ? ' → ' + v('date-end') : '')],
-      ];
-      if (v('notes')) rows.push(['Notes', v('notes')]);
-
-      document.getElementById('summary').innerHTML = rows
-        .map(([k, val]) => `<div class="summary-row"><span class="key">${k}</span><span class="val">${val}</span></div>`)
-        .join('');
-
-      document.getElementById('form-area').style.display = 'none';
-      document.getElementById('confirm-area').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } catch (e) {
-      showErr('err-global', true);
-      btn.disabled = false;
-      btn.textContent = 'Request booking';
-    }
+    goTo(4);
+  } catch(e) {
+    showErr('err-global', true);
+    btn.disabled = false;
+    btn.textContent = 'Submit booking';
   }
+}
 </script>
 </body>
 </html>
