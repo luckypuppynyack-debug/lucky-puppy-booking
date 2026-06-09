@@ -298,15 +298,22 @@ async function submitForm() {
     notes: v('notes'),
   };
 
+  // Generate booking ID client-side
+  const now = new Date();
+  const datePart = now.getFullYear().toString() +
+    String(now.getMonth() + 1).padStart(2, '0') +
+    String(now.getDate()).padStart(2, '0');
+  const sequence = String(Math.floor(Math.random() * 900) + 100);
+  const bookingId = 'LP-' + datePart + '-' + sequence;
+  payload.bookingId = bookingId;
+
   try {
-    const res = await fetch(ENDPOINT, {
+    await fetch(ENDPOINT, {
       method: 'POST',
-      redirect: 'follow',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload),
     });
-    const data = await res.json();
-    const bookingId = data.bookingId || 'N/A';
 
     const rows = [
       ['Booking ID', bookingId],
