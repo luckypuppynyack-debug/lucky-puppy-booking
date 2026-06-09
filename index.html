@@ -65,6 +65,25 @@
   .btn-next { flex: 1; padding: 13px; background: var(--green); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background .15s; }
   .btn-next:hover { background: var(--green-dark); }
   .btn-next:disabled { background: #aaa; cursor: not-allowed; }
+
+  /* Dog cards */
+  .dog-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 10px; position: relative; }
+  .dog-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .dog-card-header span { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+  .btn-remove-dog { background: none; border: none; color: #c0392b; cursor: pointer; font-size: 13px; padding: 2px 6px; border-radius: 4px; }
+  .btn-remove-dog:hover { background: #fdf0ef; }
+  .btn-add-dog { width: 100%; padding: 10px; background: transparent; border: 1px dashed var(--green); border-radius: var(--radius-sm); color: var(--green-dark); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; margin-top: 4px; transition: background .15s; }
+  .btn-add-dog:hover { background: var(--green-light); }
+
+  /* Daycare date picker */
+  .daycare-dates { display: flex; flex-direction: column; gap: 8px; }
+  .date-row { display: flex; align-items: center; gap: 8px; }
+  .date-row input { flex: 1; }
+  .btn-remove-date { background: none; border: none; color: #c0392b; cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; }
+  .btn-add-date { width: 100%; padding: 10px; background: transparent; border: 1px dashed var(--green); border-radius: var(--radius-sm); color: var(--green-dark); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; margin-top: 4px; transition: background .15s; }
+  .btn-add-date:hover { background: var(--green-light); }
+
+  /* Confirmation */
   .confirm { text-align: center; padding: 2rem 0 1rem; }
   .confirm-icon { font-size: 52px; color: var(--green); display: block; margin-bottom: 1rem; }
   .confirm h2 { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 600; margin-bottom: 8px; }
@@ -72,7 +91,7 @@
   .summary { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin: 1.25rem 0; text-align: left; }
   .sum-row { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-bottom: 0.5px solid var(--border); font-size: 13px; }
   .sum-row:last-child { border-bottom: none; }
-  .sum-row span:first-child { color: var(--text-muted); }
+  .sum-row span:first-child { color: var(--text-muted); flex-shrink: 0; }
   .sum-row span:last-child { font-weight: 500; text-align: right; }
   .fine-print { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 1rem; line-height: 1.6; }
   .fine-print a { color: var(--green-dark); text-decoration: none; }
@@ -112,7 +131,7 @@
         <h3>Boarding</h3>
         <div class="price">$75</div>
         <div class="per">per night</div>
-        <div class="desc">Overnight stay — your dog joins our pack.</div>
+        <div class="desc">Overnight stay - your dog joins our pack.</div>
       </div>
     </div>
     <div class="err" id="err-service">Please select a service.</div>
@@ -156,44 +175,56 @@
     </div>
   </div>
 
-  <!-- Page 3: Dog info + dates -->
+  <!-- Page 3: Dogs + Dates -->
   <div class="page" id="page-3">
     <div class="form-card">
-      <div class="sec-label">Dog info</div>
-      <div class="row2">
-        <div class="field">
-          <label for="dogname">Dog's name <span class="required">*</span></label>
-          <input type="text" id="dogname" placeholder="Biscuit" />
-          <div class="err" id="err-dogname">Required.</div>
-        </div>
-        <div class="field">
-          <label for="breed">Breed <span class="required">*</span></label>
-          <input type="text" id="breed" placeholder="Golden Retriever" />
-          <div class="err" id="err-breed">Required.</div>
-        </div>
-      </div>
-      <div class="row2">
-        <div class="field">
-          <label for="age">Age</label>
-          <input type="text" id="age" placeholder="2 years" />
-        </div>
-        <div class="field">
-          <label for="weight">Weight (approx.)</label>
-          <input type="text" id="weight" placeholder="45 lbs" />
+
+      <div class="sec-label">Dogs <span class="required">*</span></div>
+      <div id="dogs-container">
+        <div class="dog-card" id="dog-0">
+          <div class="dog-card-header">
+            <span>Dog 1</span>
+          </div>
+          <div class="field">
+            <label>Dog's name <span class="required">*</span></label>
+            <input type="text" class="dog-name" placeholder="Biscuit" />
+          </div>
         </div>
       </div>
-      <div class="sec-label">Dates</div>
-      <div class="row2">
-        <div class="field">
-          <label for="date-start" id="date1-label">Start date <span class="required">*</span></label>
-          <input type="date" id="date-start" />
-          <div class="err" id="err-date">Please select a date.</div>
-        </div>
-        <div class="field">
-          <label for="date-end" id="date2-label">End date</label>
-          <input type="date" id="date-end" />
+      <button class="btn-add-dog" onclick="addDog()">+ Add another dog</button>
+      <div class="err" id="err-dogs">Please enter at least one dog's name.</div>
+
+      <div class="sec-label" id="dates-label">Dates <span class="required">*</span></div>
+
+      <!-- Boarding dates -->
+      <div id="boarding-dates">
+        <div class="row2">
+          <div class="field">
+            <label for="date-start">Check-in date <span class="required">*</span></label>
+            <input type="date" id="date-start" />
+          </div>
+          <div class="field">
+            <label for="date-end">Check-out date</label>
+            <input type="date" id="date-end" />
+          </div>
         </div>
       </div>
+
+      <!-- Daycare dates -->
+      <div id="daycare-dates" style="display:none">
+        <div id="daycare-dates-list">
+          <div class="field date-row">
+            <label>Date <span class="required">*</span></label>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="date" class="daycare-date" style="flex:1;" />
+              <button class="btn-remove-date" onclick="removeDaycareDate(this)" title="Remove">&times;</button>
+            </div>
+          </div>
+        </div>
+        <button class="btn-add-date" onclick="addDaycareDate()">+ Add another day</button>
+      </div>
+      <div class="err" id="err-dates">Please select at least one date.</div>
+
       <div class="sec-label">Anything we should know?</div>
       <div class="field">
         <textarea id="notes" placeholder="Allergies, medications, behavior notes, vaccination info..."></textarea>
@@ -222,14 +253,12 @@
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbz6FF4rMUkOAoyg90HWmuvdH1Mzxf0vZghmkSznk5PhXVvfj4ijRp6Iq8e1C8TDOHk9pA/exec";
 let selectedService = null;
 let currentPage = 1;
+let dogCount = 1;
 
 function selectService(s) {
   selectedService = s;
   document.getElementById('card-daycare').classList.toggle('selected', s === 'daycare');
   document.getElementById('card-boarding').classList.toggle('selected', s === 'boarding');
-  const isBoarding = s === 'boarding';
-  document.getElementById('date1-label').innerHTML = (isBoarding ? 'Check-in date' : 'Daycare date') + ' <span style="color:#c0392b">*</span>';
-  document.getElementById('date2-label').textContent = isBoarding ? 'Check-out date' : 'End date (optional)';
   document.getElementById('err-service').classList.remove('show');
 }
 
@@ -253,6 +282,13 @@ function updateSteps(to) {
 function goTo(page) {
   if (page === 2 && !validatePage1()) return;
   if (page === 3 && !validatePage2()) return;
+
+  // Show correct date section when arriving at page 3
+  if (page === 3) {
+    document.getElementById('boarding-dates').style.display = selectedService === 'boarding' ? 'block' : 'none';
+    document.getElementById('daycare-dates').style.display = selectedService === 'daycare' ? 'block' : 'none';
+  }
+
   document.getElementById('page-' + currentPage).classList.remove('active');
   currentPage = page;
   document.getElementById('page-' + currentPage).classList.add('active');
@@ -275,37 +311,115 @@ function validatePage2() {
 
 function validatePage3() {
   let ok = true;
-  ['dogname','breed'].forEach(f => {
-    if (!v(f)) { showErr('err-'+f, true); ok = false; } else { showErr('err-'+f, false); }
-  });
-  if (!v('date-start')) { showErr('err-date', true); ok = false; } else { showErr('err-date', false); }
+
+  // Validate dogs
+  const dogNames = getDogNames();
+  if (dogNames.length === 0 || dogNames.some(n => !n)) {
+    showErr('err-dogs', true); ok = false;
+  } else { showErr('err-dogs', false); }
+
+  // Validate dates
+  if (selectedService === 'boarding') {
+    if (!v('date-start')) { showErr('err-dates', true); ok = false; } else { showErr('err-dates', false); }
+  } else {
+    const dates = getDaycareDates();
+    if (dates.length === 0 || dates.some(d => !d)) { showErr('err-dates', true); ok = false; } else { showErr('err-dates', false); }
+  }
+
   return ok;
+}
+
+function getDogNames() {
+  return Array.from(document.querySelectorAll('.dog-name')).map(i => i.value.trim()).filter(n => n);
+}
+
+function getDaycareDates() {
+  return Array.from(document.querySelectorAll('.daycare-date')).map(i => i.value.trim()).filter(d => d);
+}
+
+function addDog() {
+  dogCount++;
+  const container = document.getElementById('dogs-container');
+  const div = document.createElement('div');
+  div.className = 'dog-card';
+  div.id = 'dog-' + (dogCount - 1);
+  div.innerHTML = `
+    <div class="dog-card-header">
+      <span>Dog ${dogCount}</span>
+      <button class="btn-remove-dog" onclick="removeDog(this)">Remove</button>
+    </div>
+    <div class="field">
+      <label>Dog's name <span class="required">*</span></label>
+      <input type="text" class="dog-name" placeholder="Cookie" />
+    </div>
+  `;
+  container.appendChild(div);
+}
+
+function removeDog(btn) {
+  const card = btn.closest('.dog-card');
+  card.remove();
+  // Renumber
+  document.querySelectorAll('.dog-card').forEach((c, i) => {
+    c.querySelector('.dog-card-header span').textContent = 'Dog ' + (i + 1);
+  });
+  dogCount = document.querySelectorAll('.dog-card').length;
+}
+
+function addDaycareDate() {
+  const list = document.getElementById('daycare-dates-list');
+  const row = document.createElement('div');
+  row.className = 'field date-row';
+  row.innerHTML = `
+    <label>Date <span style="color:#c0392b">*</span></label>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <input type="date" class="daycare-date" style="flex:1;" />
+      <button class="btn-remove-date" onclick="removeDaycareDate(this)" title="Remove">&times;</button>
+    </div>
+  `;
+  list.appendChild(row);
+}
+
+function removeDaycareDate(btn) {
+  const rows = document.querySelectorAll('.date-row');
+  if (rows.length > 1) btn.closest('.date-row').remove();
 }
 
 async function submitForm() {
   if (!validatePage3()) return;
   const btn = document.getElementById('submit-btn');
   btn.disabled = true;
-  btn.textContent = 'Sending…';
+  btn.textContent = 'Sending...';
 
-  const payload = {
-    service: selectedService === 'boarding' ? 'Boarding ($75/night)' : 'Daycare ($45/day)',
-    firstName: v('fname'), lastName: v('lname'),
-    phone: v('phone'), email: v('email'),
-    dogName: v('dogname'), breed: v('breed'),
-    age: v('age'), weight: v('weight'),
-    startDate: v('date-start'), endDate: v('date-end'),
-    notes: v('notes'),
-  };
-
-  // Generate booking ID client-side
+  const dogNames = getDogNames();
   const now = new Date();
   const datePart = now.getFullYear().toString() +
     String(now.getMonth() + 1).padStart(2, '0') +
     String(now.getDate()).padStart(2, '0');
   const sequence = String(Math.floor(Math.random() * 900) + 100);
   const bookingId = 'LP-' + datePart + '-' + sequence;
-  payload.bookingId = bookingId;
+
+  let dates = '';
+  if (selectedService === 'boarding') {
+    dates = v('date-start') + (v('date-end') ? ' to ' + v('date-end') : '');
+  } else {
+    dates = getDaycareDates().join(', ');
+  }
+
+  const payload = {
+    bookingId: bookingId,
+    service: selectedService === 'boarding' ? 'Boarding ($75/night)' : 'Daycare ($45/day)',
+    firstName: v('fname'),
+    lastName: v('lname'),
+    phone: v('phone'),
+    email: v('email'),
+    dogs: dogNames.join(', '),
+    numberOfDogs: dogNames.length,
+    dates: dates,
+    startDate: selectedService === 'boarding' ? v('date-start') : getDaycareDates()[0],
+    endDate: selectedService === 'boarding' ? v('date-end') : getDaycareDates()[getDaycareDates().length - 1],
+    notes: v('notes'),
+  };
 
   try {
     await fetch(ENDPOINT, {
@@ -321,8 +435,8 @@ async function submitForm() {
       ['Owner', payload.firstName + ' ' + payload.lastName],
       ['Phone', payload.phone],
       ['Email', payload.email],
-      ['Dog', payload.dogName + (payload.breed ? ' (' + payload.breed + ')' : '')],
-      ['Dates', payload.startDate + (payload.endDate ? ' → ' + payload.endDate : '')],
+      ['Dogs', payload.dogs],
+      ['Dates', dates],
     ];
     if (payload.notes) rows.push(['Notes', payload.notes]);
 
