@@ -301,6 +301,7 @@ async function submitForm() {
   try {
     const res = await fetch(ENDPOINT, {
       method: 'POST',
+      redirect: 'follow',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
