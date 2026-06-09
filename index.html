@@ -213,12 +213,9 @@
       <!-- Daycare dates -->
       <div id="daycare-dates" style="display:none">
         <div id="daycare-dates-list">
-          <div class="field date-row">
-            <label>Date <span class="required">*</span></label>
-            <div style="display:flex;align-items:center;gap:8px;">
-              <input type="date" class="daycare-date" style="flex:1;" />
-              <button class="btn-remove-date" onclick="removeDaycareDate(this)" title="Remove">&times;</button>
-            </div>
+          <div class="daycare-date-row" style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <input type="date" class="daycare-date" style="flex:1;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;outline:none;" />
+            <button class="btn-remove-date" onclick="removeDaycareDate(this)" title="Remove" style="flex-shrink:0;">&times;</button>
           </div>
         </div>
         <button class="btn-add-date" onclick="addDaycareDate()">+ Add another day</button>
@@ -285,8 +282,11 @@ function goTo(page) {
 
   // Show correct date section when arriving at page 3
   if (page === 3) {
+    const today = new Date().toISOString().split('T')[0];
     document.getElementById('boarding-dates').style.display = selectedService === 'boarding' ? 'block' : 'none';
     document.getElementById('daycare-dates').style.display = selectedService === 'daycare' ? 'block' : 'none';
+    // Set min date to today for all date inputs
+    document.querySelectorAll('input[type="date"]').forEach(i => i.setAttribute('min', today));
   }
 
   document.getElementById('page-' + currentPage).classList.remove('active');
@@ -369,20 +369,18 @@ function removeDog(btn) {
 function addDaycareDate() {
   const list = document.getElementById('daycare-dates-list');
   const row = document.createElement('div');
-  row.className = 'field date-row';
+  row.className = 'daycare-date-row';
+  row.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:10px;';
   row.innerHTML = `
-    <label>Date <span style="color:#c0392b">*</span></label>
-    <div style="display:flex;align-items:center;gap:8px;">
-      <input type="date" class="daycare-date" style="flex:1;" />
-      <button class="btn-remove-date" onclick="removeDaycareDate(this)" title="Remove">&times;</button>
-    </div>
+    <input type="date" class="daycare-date" style="flex:1;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;outline:none;" />
+    <button class="btn-remove-date" onclick="removeDaycareDate(this)" title="Remove" style="flex-shrink:0;">&times;</button>
   `;
   list.appendChild(row);
 }
 
 function removeDaycareDate(btn) {
-  const rows = document.querySelectorAll('.date-row');
-  if (rows.length > 1) btn.closest('.date-row').remove();
+  const rows = document.querySelectorAll('.daycare-date-row');
+  if (rows.length > 1) btn.closest('.daycare-date-row').remove();
 }
 
 async function submitForm() {
@@ -435,6 +433,7 @@ async function submitForm() {
       ['Owner', payload.firstName + ' ' + payload.lastName],
       ['Phone', payload.phone],
       ['Email', payload.email],
+      ['# of Dogs', String(payload.numberOfDogs)],
       ['Dogs', payload.dogs],
       ['Dates', dates],
     ];
