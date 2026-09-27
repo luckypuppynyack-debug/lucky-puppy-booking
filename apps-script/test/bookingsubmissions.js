@@ -1,5 +1,5 @@
 var ADMIN_EMAIL = "luckypuppynyack@gmail.com";
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz6FF4rMUkOAoyg90HWmuvdH1Mzxf0vZghmkSznk5PhXVvfj4ijRp6Iq8e1C8TDOHk9pA/exec";
+var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-zODOKbdFqI_-w5e4qVqBgyPw_-gkno-t4lHnhWYMHwa-JGwtI740hXnrKE8BkfwD/exec";
 
 function doPost(e) {
   try {
