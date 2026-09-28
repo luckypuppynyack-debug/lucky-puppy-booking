@@ -1,5 +1,4 @@
 var ADMIN_EMAIL = "luckypuppynyack@gmail.com";
-var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-zODOKbdFqI_-w5e4qVqBgyPw_-gkno-t4lHnhWYMHwa-JGwtI740hXnrKE8BkfwD/exec";
 
 function doPost(e) {
   try {
@@ -25,8 +24,9 @@ function doPost(e) {
       data.notes
     ]);
 
-    var acceptUrl  = SCRIPT_URL + "?action=accept&bookingId="  + bookingId;
-    var declineUrl = SCRIPT_URL + "?action=decline&bookingId=" + bookingId;
+    var scriptUrl  = ScriptApp.getService().getUrl();
+    var acceptUrl  = scriptUrl + "?action=accept&bookingId="  + bookingId;
+    var declineUrl = scriptUrl + "?action=decline&bookingId=" + bookingId;
 
     var emailBody =
       "<h2>New Booking Request</h2>" +
