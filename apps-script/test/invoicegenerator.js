@@ -784,12 +784,6 @@ function testInvoiceForBooking() {
   Logger.log('Test boarding invoice generated for: ' + TEST_BOOKING_ID);
 }
 
-// TEMP — verifying the loadClientDogs duplicate-column fix. Delete after checking logs.
-function testLoadClientDogsFix() {
-  var dogs = loadClientDogs('rosemarie.ferrara@live.com', 'Elizabeth, Jack', 2);
-  Logger.log(JSON.stringify(dogs));
-}
-
 function testDaycareInvoice() {
   var TEST_BOOKING_ID  = 'LP-20260809-838'; // ← change to your daycare booking ID
   var TEST_WEEK_ENDING = '2026-07-25';       // ← Friday of the week to bill
