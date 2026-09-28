@@ -368,8 +368,7 @@ function generateInvoiceForApproval(row, rates, cal) {
   logInvoice(invoiceId, booking.id, booking.firstName + ' ' + booking.lastName, booking.service, charges.total);
   saveInvoiceHtml(invoiceId, html);
 
-var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6FF4rMUkOAoyg90HWmuvdH1Mzxf0vZghmkSznk5PhXVvfj4ijRp6Iq8e1C8TDOHk9pA/exec';
-var sendUrl = SCRIPT_URL + '?action=sendInvoice&invoiceId=' + invoiceId + '&bookingId=' + booking.id;
+var sendUrl = ScriptApp.getService().getUrl() + '?action=sendInvoice&invoiceId=' + invoiceId + '&bookingId=' + booking.id;
 
   var approvalBanner =
     '<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto 16px;">' +
@@ -398,8 +397,7 @@ function generateDaycareInvoiceForApproval(client, friday, rates, cal) {
   logInvoice(invoiceId, client.bookingIds.join(', '), client.name, 'Daycare (weekly)', charges.total);
   saveInvoiceHtml(invoiceId, html);
 
-var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz6FF4rMUkOAoyg90HWmuvdH1Mzxf0vZghmkSznk5PhXVvfj4ijRp6Iq8e1C8TDOHk9pA/exec';
-var sendUrl = SCRIPT_URL + '?action=sendDaycareInvoice&invoiceId=' + invoiceId;
+var sendUrl = ScriptApp.getService().getUrl() + '?action=sendDaycareInvoice&invoiceId=' + invoiceId;
 
   var approvalBanner =
     '<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto 16px;">' +
