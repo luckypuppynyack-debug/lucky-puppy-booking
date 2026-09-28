@@ -146,7 +146,7 @@ function doGet(e) {
     if (bookingData['Service'].indexOf('Daycare') !== -1) {
       var dates = String(bookingData['Dates']).split(',').map(function(d) { return d.trim(); });
       dates.forEach(function(dateStr) {
-        var d = new Date(dateStr);
+        var d = parseLocalDate(dateStr);
         calendar.createAllDayEvent(eventTitle, d, { description: eventDesc, guests: bookingData['Email'] });
       });
     } else {
@@ -203,6 +203,13 @@ function doGet(e) {
   }
 
   return HtmlService.createHtmlOutput("<h2>Unknown action.</h2>");
+}
+
+// Parses a "YYYY-MM-DD" string as a local-timezone date. new Date("YYYY-MM-DD")
+// parses as UTC midnight, which shifts to the prior day in US timezones.
+function parseLocalDate(dateStr) {
+  var parts = dateStr.split('-');
+  return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
 }
 
 function invoiceSentPage(invoiceId) {
