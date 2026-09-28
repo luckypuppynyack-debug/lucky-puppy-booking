@@ -108,24 +108,36 @@ function loadClientDogs(email, dogNamesStr, numDogs) {
   var oneYearAgo = new Date(today);
   oneYearAgo.setFullYear(today.getFullYear() - 1);
   var dobMap     = {};
+  var emailIdx   = headers.indexOf('Email');
+
+  // The intake form has duplicate "Dog N Name" / "Dog N Date of Birth" column
+  // sets from a past form restructure (e.g. "Dog 1 Name" appears twice). A
+  // plain header->value map silently lets a later, blank duplicate overwrite
+  // an earlier, filled one, so instead we collect every column index for each
+  // name field and read its Date of Birth 3 columns over (Name, Gender,
+  // Breed, DOB is the fixed layout for every dog slot in this sheet).
+  var nameFields = ['Dog Name', 'Dog 1 Name', 'Dog 2 Name', 'Dog 3 Name'];
+  var nameFieldIndices = {};
+  nameFields.forEach(function(field) {
+    nameFieldIndices[field] = [];
+    headers.forEach(function(h, idx) { if (h === field) nameFieldIndices[field].push(idx); });
+  });
 
   for (var i = 1; i < data.length; i++) {
-    var row = {};
-    headers.forEach(function(h, idx) { row[h] = data[i][idx]; });
-    var rowEmail = (row['Email'] || '').toString().trim().toLowerCase();
+    var rowEmail = (data[i][emailIdx] || '').toString().trim().toLowerCase();
     if (rowEmail !== email.trim().toLowerCase()) continue;
 
-    var singleName = (row['Dog Name'] || '').toString().trim().toLowerCase();
-    var singleDob  = row['Dog Date of Birth'] ? new Date(row['Dog Date of Birth']) : null;
-    if (singleName) dobMap[singleName] = singleDob ? singleDob > oneYearAgo : false;
-
-    [{ name: 'Dog 1 Name', dob: 'Dog 1 Date of Birth' },
-     { name: 'Dog 2 Name', dob: 'Dog 2 Date of Birth' },
-     { name: 'Dog 3 Name', dob: 'Dog 3 Date of Birth' }].forEach(function(f) {
-      var n = (row[f.name] || '').toString().trim().toLowerCase();
-      if (!n) return;
-      var d = row[f.dob] ? new Date(row[f.dob]) : null;
-      dobMap[n] = d ? d > oneYearAgo : false;
+    nameFields.forEach(function(field) {
+      nameFieldIndices[field].forEach(function(nameIdx) {
+        var n = (data[i][nameIdx] || '').toString().trim().toLowerCase();
+        if (!n) return;
+        var dobIdx = nameIdx + 3;
+        var d = data[i][dobIdx] ? new Date(data[i][dobIdx]) : null;
+        // Keep the first match; upgrade only if a later duplicate has a DOB we didn't already have.
+        if (dobMap[n] === undefined || (d && dobMap[n] === false)) {
+          dobMap[n] = d ? d > oneYearAgo : false;
+        }
+      });
     });
     break;
   }
